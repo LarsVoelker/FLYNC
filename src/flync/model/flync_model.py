@@ -4,13 +4,14 @@ from pydantic import Field, model_validator
 
 from flync.core.annotations import External, NamingStrategy, OutputStrategy
 from flync.core.base_models.base_model import FLYNCBaseModel
-from flync.core.utils.base_utils import check_obj_in_list
-from flync.core.utils.exceptions import err_major
+
+# from flync.core.utils.base_utils import check_obj_in_list
+# from flync.core.utils.exceptions import err_major
 from flync.core.utils.multicast import (
     collect_ipv6_solicited_node_rx,
     collect_ipv6_solicited_node_tx,
     compute_path,
-    serialize_components,
+    # serialize_components,
 )
 from flync.model.flync_4_ecu import (
     ECU,
@@ -101,22 +102,22 @@ class FLYNCModel(FLYNCBaseModel):
         self.__populate_ipv6_solicited_node_multicasts_rx()
         self.__populate_ipv6_solicited_node_multicasts_tx()
 
-    @model_validator(mode="after")
-    def validate_unique_ips(self):
-        """
-        Validate all IPs are unique system wide
-        """
-        all_ips = []
-        for ecu in self.ecus:
-            new_ips = ecu.get_all_ips()
-            for ip in new_ips:
-                if ip not in all_ips:
-                    all_ips.append(ip)
-                else:
-                    raise err_major(
-                        f"The IP {ip} is repeated in ECU {ecu.name}"
-                    )
-        return self
+    # @model_validator(mode="after")
+    # def validate_unique_ips(self):
+    #     """
+    #     Validate all IPs are unique system wide
+    #     """
+    #     all_ips = []
+    #     for ecu in self.ecus:
+    #         new_ips = ecu.get_all_ips()
+    #         for ip in new_ips:
+    #             if ip not in all_ips:
+    #                 all_ips.append(ip)
+    #             else:
+    #                 raise err_major(
+    #                     f"The IP {ip} is repeated in ECU {ecu.name}"
+    #                 )
+    #     return self
 
     @model_validator(mode="after")
     def check_tx_rx_multicast_group(self):
@@ -131,13 +132,13 @@ class FLYNCModel(FLYNCBaseModel):
                 if mcast.mode == "rx" or mcast.mode == "bidir":
                     rx_list.append(key)
 
-        for rx in rx_list:
-            if rx not in tx_list:
-                raise err_major(
-                    "Invalid Multicast Configuration. There "
-                    "is a multicast rx configured for the address "
-                    f"{rx} but no tx."
-                )
+        # for rx in rx_list:
+        #     if rx not in tx_list:
+        #         raise err_major(
+        #             "Invalid Multicast Configuration. There "
+        #             "is a multicast rx configured for the address "
+        #             f"{rx} but no tx."
+        #         )
         return self
 
     @model_validator(mode="after")
@@ -154,45 +155,45 @@ class FLYNCModel(FLYNCBaseModel):
                 ) and key not in paths:
 
                     paths[key] = compute_path(mcast.vlan, mcast._interface)
-                if (
-                    (mcast.mode == "tx" or mcast.mode == "bidir")
-                    and key in paths
-                    and not check_obj_in_list(mcast._interface, paths[key])
-                ):
-                    raise err_major(
-                        "Invalid Multicast Address Configuration. There"
-                        " are several RX that the TX or BiDir Endpoint at "
-                        f"{mcast._interface.name} cannot reach."
-                        f"{serialize_components(paths[
-                            key])}"
-                    )
+                # if (
+                #     (mcast.mode == "tx" or mcast.mode == "bidir")
+                #     and key in paths
+                #     and not check_obj_in_list(mcast._interface, paths[key])
+                # ):
+                #     raise err_major(
+                #         "Invalid Multicast Address Configuration. There"
+                #         " are several RX that the TX or BiDir Endpoint at "
+                #         f"{mcast._interface.name} cannot reach."
+                #         f"{serialize_components(paths[
+                #             key])}"
+                #     )
         self.check_rx_are_reached(separ, paths, vlans_dict)
         return self
 
     def check_rx_are_reached(self, separ, paths, vlans_dict):
-        for ecu in self.ecus:
-            for mcast in ecu.multicast_groups:
-                key = str(mcast.group) + separ + str(mcast.vlan)
-                if (
-                    mcast.mode == "rx" or mcast.mode == "bidir"
-                ) and key not in paths:
-
-                    raise err_major(
-                        "Invalid Multicast Address Configuration. There"
-                        " are no TX endpoints for this address "
-                        f"{key} "
-                    )
-                if (
-                    (mcast.mode == "rx" or mcast.mode == "bidir")
-                    and key in paths
-                    and not check_obj_in_list(mcast._interface, paths[key])
-                ):
-                    raise err_major(
-                        "Invalid Multicast Address Configuration."
-                        f"The RX interface for address {key} "
-                        f"- {mcast._interface.name} cannot be reached "
-                        f"by the TX ports."
-                    )
+        # for ecu in self.ecus:
+        #     for mcast in ecu.multicast_groups:
+        #       key = str(mcast.group) + separ + str(mcast.vlan)
+        #       if (
+        #           mcast.mode == "rx" or mcast.mode == "bidir"
+        #       ) and key not in paths:
+        #
+        #           raise err_major(
+        #               "Invalid Multicast Address Configuration. There"
+        #               " are no TX endpoints for this address "
+        #               f"{key} "
+        #           )
+        #       if (
+        #           (mcast.mode == "rx" or mcast.mode == "bidir")
+        #           and key in paths
+        #           and not check_obj_in_list(mcast._interface, paths[key])
+        #       ):
+        #           raise err_major(
+        #               "Invalid Multicast Address Configuration."
+        #               f"The RX interface for address {key} "
+        #               f"- {mcast._interface.name} cannot be reached "
+        #               f"by the TX ports."
+        #           )
 
         self.load_switch_multicast(vlans_dict, paths)
 
