@@ -80,18 +80,17 @@ def check_vlan_conn_valid(comp, list1, list2, vlan):
     """
     Helper to help compute multicast paths
     """
-    flag = True
     if not comp:
-        flag = False
+        return False
     if check_obj_in_list(comp, list1):
-        flag = False
+        return False
     if check_obj_in_list(comp, list2):
-        flag = False
+        return False
     if comp.type == "switch_port" and not comp.is_part_of_vlan(vlan):
-        flag = False
+        return False
     if comp.type == "controller_interface" and not comp.is_part_of_vlan(vlan):
-        flag = False
-    return flag
+        return False
+    return True
 
 
 def compute_path(vlan, interface):

@@ -195,6 +195,10 @@ class ECU(UniqueName):
             if not sockets:
                 continue
             for socket in sockets:
+                # Multicast endpoint sockets are group subscriptions — not
+                # bound to a unicast IP, so skip the unicast-IP check.
+                if socket.endpoint_type == "multicast":
+                    continue
                 if str(socket.endpoint_address) not in ips:
                     raise err_minor(
                         f"Error in socket {socket.name}:\n"
