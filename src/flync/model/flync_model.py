@@ -7,11 +7,10 @@ from flync.core.base_models.base_model import FLYNCBaseModel
 
 # from flync.core.utils.base_utils import check_obj_in_list
 # from flync.core.utils.exceptions import err_major
-from flync.core.utils.multicast import (
+from flync.core.utils.multicast import (  # serialize_components,
     collect_ipv6_solicited_node_rx,
     collect_ipv6_solicited_node_tx,
     compute_path,
-    # serialize_components,
 )
 from flync.model.flync_4_ecu import (
     ECU,
