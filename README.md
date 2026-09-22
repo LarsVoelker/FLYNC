@@ -102,7 +102,7 @@
 | src/flync/model/flync\_4\_signal/value\_encoding.py             |       94 |        1 |     99% |       127 |
 | src/flync/model/flync\_4\_someip/\_\_init\_\_.py                |        8 |        0 |    100% |           |
 | src/flync/model/flync\_4\_someip/deployment.py                  |       79 |        1 |     99% |       176 |
-| src/flync/model/flync\_4\_someip/service\_interface.py          |      223 |        5 |     98% |293, 401, 596, 877, 915 |
+| src/flync/model/flync\_4\_someip/service\_interface.py          |      223 |        4 |     98% |401, 596, 877, 915 |
 | src/flync/model/flync\_4\_someip/someip\_complex\_datatypes.py  |       50 |        0 |    100% |           |
 | src/flync/model/flync\_4\_someip/someip\_simple\_datatypes.py   |      150 |        0 |    100% |           |
 | src/flync/model/flync\_4\_topology/\_\_init\_\_.py              |        6 |        0 |    100% |           |
@@ -201,7 +201,7 @@
 | src/flync\_converter/hookspec.py                                |        4 |        0 |    100% |           |
 | src/flync\_converter/registry.py                                |       32 |       19 |     41% |23-30, 37-49, 56-59 |
 | src/flync\_converter/utils.py                                   |       75 |        4 |     95% |63-64, 93-94 |
-| **TOTAL**                                                       | **12606** |  **801** | **94%** |           |
+| **TOTAL**                                                       | **12606** |  **800** | **94%** |           |
 
 
 ## Setup coverage badge
